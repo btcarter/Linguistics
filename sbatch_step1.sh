@@ -59,42 +59,39 @@ fi
 # make NIFTI files
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	${D2N} \
-	-f %i \
 	-z y \
 	-x y \
 	-o ${PARTICIPANT_STRUCT} \
 	-i ${DICOM_DIR}
-	#mv ${PARTICIPANT_STRUCT}/co*.nii ${PARTICIPANT_STRUCT}/struct_orig.nii
+	mv ${PARTICIPANT_STRUCT}/*Crop*.nii ${PARTICIPANT_STRUCT}/${1}_T1w.nii
 fi
 
 # 2. Perform ACPC alignment
-# if [ ! -f ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz ]; then
-# 	${ACPC} \
-# 	-M \
-# 	-o ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz \
-# 	-i ${PARTICIPANT_STRUCT}/struct_orig.nii
-# fi
-# 
-# 
+if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz ]; then
+	${ACPC} \
+	-M \
+	-o ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz \
+	-i ${PARTICIPANT_STRUCT}/${1}_T1w.nii
+fi
+
+
 # 3. Perform N4-Bias Correction
-# DIM=3
-# ACPC=${PARTICIPANT_STRUCT}/struct_acpc.nii.gz
-# N4=${PARTICIPANT_STRUCT}/struct_n4bc.nii.gz
-# 
-# CON=[50x50x50x50,0.0000001]
-# SHRINK=4
-# BSPLINE=[200]
-# 
-# if [ ! -f $N4 ]; then
-# 
-# 	${N4BC} \
-# 	-d $DIM \
-# 	-i $ACPC \
-# 	-s $SHRINK \
-# 	-c $CON \
-# 	-b $BSPLINE \
-# 	-o $N4
-# 
-# fi
-# 
-# cd ${START_DIR}
+DIM=3
+ACPC=${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz
+N4=${PARTICIPANT_STRUCT}/${1}_T1w_n4bc.nii.gz
+
+CON=[50x50x50x50,0.0000001]
+SHRINK=4
+BSPLINE=[200]
+
+if [ ! -f $N4 ]; then
+
+	${N4BC} \
+	-d $DIM \
+	-i $ACPC \
+	-s $SHRINK \
+	-c $CON \
+	-b $BSPLINE \
+	-o $N4
+
+fi

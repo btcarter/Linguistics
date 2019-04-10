@@ -27,13 +27,14 @@ export OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE
 START_DIR=${pwd} 											# in case you want an easy reference to return to the directory you started in.
 STUDY=~/compute/skilledReadingStudy					    	# location of study directory
 TEMPLATE_DIR=${STUDY}/template 								# destination for template output
-DICOM_DIR=${STUDY}/dicomdir/${1}/t1_mpr_sag_iso_mprage_7	# location of raw dicoms for participant
+DICOM_DIR=${STUDY}/dicomdir/${1}/t1_*						# location of raw dicoms for participant
 SCRIPT_DIR=~/analyses/structuralSkilledReading				# location of scripts that might be referenced; assumed to be separate from the data directory.
 PARTICIPANT_STRUCT=${STUDY}/structural/{1}					# location of derived participant structural data
 
 ####################
 # --- COMMANDS --- #
 ####################
+# ------------------
 # OPERATIONS: these are performed once per participant as submitted.
 # 1. NIFTIs are created from the native DICOMS
 # 2. NIFTIs are ACPC aligned
@@ -45,6 +46,11 @@ PARTICIPANT_STRUCT=${STUDY}/structural/{1}					# location of derived participant
 if [ ! -d ${DICOM_DIR} && ! -f ${DICOM_DIR}/*.dcm ]; then
 	echo "I did not find anything to process."
 	exit 1
+fi
+
+# make a place to put the NIFTI files
+if [ ! -d ${PARTICIPANT_STRUCT} ]; then
+	mkdir -p ${PARTICIPANT_STRUCT}	
 fi
 
 # make NIFTI files

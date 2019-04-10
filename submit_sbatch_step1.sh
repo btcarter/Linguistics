@@ -17,7 +17,7 @@ DICOM_DIR=${STUDY}/dicomdir 						    # location of raw dicoms
 SCRIPT_DIR=~/analyses/structuralSkilledReading			# location of scripts that might be referenced; assumed to be separate from the data directory.
 LIST=${SCRIPT_DIR}/participants.tsv 					# list of participant IDs
 LOG=~/logfiles											# where to put documentation about errors and outputs
-time=`date '+%Y_%m_%d-%H_%M_%S'`						# time stamp for e's and o's
+TIME=`date '+%Y_%m_%d-%H_%M_%S'`						# time stamp for e's and o's
 
 
 # Ensure conditions are right for this to run
@@ -41,7 +41,7 @@ fi
 
 for i in $(cat $LIST); do
 
-	OUT=${LOG}/TEMPLATE_${time}/${i}
+	OUT=${LOG}/TEMPLATE_STEP1_${TIME}
 	
     sbatch \
     -o ${OUT}/output_step1_${i}.txt \

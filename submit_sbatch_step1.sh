@@ -42,6 +42,10 @@ fi
 for i in $(cat $LIST); do
 
 	OUT=${LOG}/TEMPLATE_STEP1_${TIME}
+
+	if [ ! -d ${OUT} ]; then
+		mkdir -p ${OUT}
+	fi
 	
     sbatch \
     -o ${OUT}/output_step1_${i}.txt \

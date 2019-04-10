@@ -31,6 +31,8 @@ DICOM_DIR=${STUDY}/dicomdir/${1}/t1_*						# location of raw dicoms for particip
 SCRIPT_DIR=~/analyses/structuralSkilledReading				# location of scripts that might be referenced; assumed to be separate from the data directory.
 PARTICIPANT_STRUCT=${STUDY}/structural/${1}					# location of derived participant structural data
 D2N=~/apps/dcm2niix/bin/dcm2niix							# path to dcm2niix
+ACPC=~/apps/art/acpcdetect									# path to acpcdetect
+N4BC=~/apps/ants/bin/N4BiasFieldCorrection					# path to N4BiasFieldCorrection
 
 ####################
 # --- COMMANDS --- #
@@ -57,13 +59,20 @@ fi
 # make NIFTI files
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	cd ${PARTICIPANT_STRUCT}
-	${D2N} -a y -g n -x y ${DICOM_DIR}/*.dcm
+	${D2N} \
+	-a y \
+	-g n \
+	-x y \
+	${DICOM_DIR}/*.dcm
 	mv co*.nii struct_orig.nii
 fi
 
 # 2. Perform ACPC alignment
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz ]; then
-	acpcdetect -M -o ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz -i ${PARTICIPANT_STRUCT}/struct_orig.nii
+	${ACPC} \
+	-M \
+	-o ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz \
+	-i ${PARTICIPANT_STRUCT}/struct_orig.nii
 fi
 
 
@@ -78,7 +87,7 @@ BSPLINE=[200]
 
 if [ ! -f $N4 ]; then
 
-	N4BiasFieldCorrection \
+	${N4BC} \
 	-d $DIM \
 	-i $ACPC \
 	-s $SHRINK \

@@ -39,12 +39,14 @@ if [ ! -f ${LIST} ]; then
 fi
 
 
-for i in $(cat $LIST) ; do
+for i in $(cat $LIST); do
 
+	OUT=${LOG}/TEMPLATE_${time}/${i}
+	
     sbatch \
-    -o ${outDir}/output_step1_${i}.txt \
-    -e ${outDir}/error_step1_${i}.txt \
-    sbatch_step1.sh $i
+    -o ${OUT}/output_step1_${i}.txt \
+    -e ${OUT}/error_step1_${i}.txt \
+    sbatch_step1.sh ${i}
 
     sleep 1
 

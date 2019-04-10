@@ -30,6 +30,7 @@ TEMPLATE_DIR=${STUDY}/template 								# destination for template output
 DICOM_DIR=${STUDY}/dicomdir/${1}/t1_*						# location of raw dicoms for participant
 SCRIPT_DIR=~/analyses/structuralSkilledReading				# location of scripts that might be referenced; assumed to be separate from the data directory.
 PARTICIPANT_STRUCT=${STUDY}/structural/{1}					# location of derived participant structural data
+D2N=~/apps/dcm2niix/bin/dcm2niix							# path to dcm2niix
 
 ####################
 # --- COMMANDS --- #
@@ -56,7 +57,7 @@ fi
 # make NIFTI files
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	cd ${PARTICIPANT_STRUCT}
-	dcm2niix -a y -g n -x y ${DICOM_DIR}/*.dcm
+	${D2N} -a y -g n -x y ${DICOM_DIR}/*.dcm
 	mv co*.nii struct_orig.nii
 fi
 

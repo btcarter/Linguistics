@@ -42,7 +42,6 @@ PARTICIPANT_STRUCT=${STUDY}/structural/{1}					# location of derived participant
 
 # 1. Create NIFTI files from the DICOMs
 # check for the dicoms
-
 if [ ! -d ${DICOM_DIR} && ! -f ${DICOM_DIR}/*.dcm ]; then
 	echo "I did not find anything to process."
 	exit 1
@@ -81,5 +80,7 @@ if [ ! -f $N4 ]; then
 	-o $N4
 
 fi
+
+cd ${START_DIR}
 
 done

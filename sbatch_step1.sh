@@ -59,8 +59,6 @@ fi
 # make NIFTI files
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	${D2N} \
-	-a y \
-	-g n \
 	-x y \
 	-o ${PARTICIPANT_STRUCT} \
 	-i ${DICOM_DIR}

@@ -29,7 +29,7 @@ STUDY=~/compute/skilledReadingStudy					    	# location of study directory
 TEMPLATE_DIR=${STUDY}/template 								# destination for template output
 DICOM_DIR=${STUDY}/dicomdir/${1}/t1_*						# location of raw dicoms for participant
 SCRIPT_DIR=~/analyses/structuralSkilledReading				# location of scripts that might be referenced; assumed to be separate from the data directory.
-PARTICIPANT_STRUCT=${STUDY}/structural/{1}					# location of derived participant structural data
+PARTICIPANT_STRUCT=${STUDY}/structural/${1}					# location of derived participant structural data
 D2N=~/apps/dcm2niix/bin/dcm2niix							# path to dcm2niix
 
 ####################

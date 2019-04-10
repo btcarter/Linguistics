@@ -64,7 +64,7 @@ if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	-g n \
 	-x y \
 	${DICOM_DIR}/*.dcm
-	mv co*.nii struct_orig.nii
+	#mv co*.nii ${PARTICIPANT_STRUCT}/struct_orig.nii
 fi
 
 # 2. Perform ACPC alignment

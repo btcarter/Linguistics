@@ -46,7 +46,7 @@ N4BC=~/apps/ants/bin/N4BiasFieldCorrection					# path to N4BiasFieldCorrection
 
 # 1. Create NIFTI files from the DICOMs
 # check for the dicoms
-if [ ! -d ${DICOM_DIR} && ! -f ${DICOM_DIR}/*.dcm ]; then
+if [ ! -d ${DICOM_DIR} ] && [ ! -f ${DICOM_DIR}/*.dcm ]; then
 	echo "I did not find anything to process."
 	exit 1
 fi
@@ -59,6 +59,7 @@ fi
 # make NIFTI files
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	${D2N} \
+	-f %i \
 	-z y \
 	-x y \
 	-o ${PARTICIPANT_STRUCT} \

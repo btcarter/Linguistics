@@ -35,6 +35,24 @@ LIST=${SCRIPT_DIR}/participants.tsv 					# list of participant IDs
 # --- COMMANDS --- #
 ####################
 
+# Ensure conditions are right for this to run
+# create a directory for the template
+if [ ! -d ${TEMPLATE_DIR} ]; then
+	mkdir -p ${TEMPLATE_DIR}
+fi
+
+# make sure the dicom directory exists
+if [ ! -d ${DICOM_DIR} ]; then
+	echo ${DICOM_DIR} does not exist, check your variable DICOM_DIR.
+	exit 1
+fi
+
+# check for participant list
+if [ ! -f ${LIST} ]; then
+	echo ${LIST} does not exist, check your variable LIST
+	exit 1
+fi
+
 # Create NIFTI files from the DICOMs
 cd $DICOM_DIR
 

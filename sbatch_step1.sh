@@ -55,16 +55,13 @@ if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	mv co*.nii struct_orig.nii
 fi
 
-
-cd $PARTICIPANT_DIR
-
 # 2. Perform ACPC alignment
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz ]; then
 	acpcdetect -M -o ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz -i ${PARTICIPANT_STRUCT}/struct_orig.nii
 fi
 
 
-# n4bc
+# 3. Perform N4-Bias Correction
 DIM=3
 ACPC=${PARTICIPANT_STRUCT}/struct_acpc.nii.gz
 N4=${PARTICIPANT_STRUCT}/struct_n4bc.nii.gz

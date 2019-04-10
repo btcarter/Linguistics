@@ -2,7 +2,7 @@
 
 
 # Originally written by Nathan Muncy on 11/20/17.
-# Then butchered by Ben Carter, 2019-04-09.
+# Butchered by Ben Carter, 2019-04-09.
 
 
 #SBATCH --time=10:00:00   # walltime
@@ -24,87 +24,65 @@ export OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE
 # --- ENVIRONMENT --- #
 #######################
 
-START_DIR=${pwd} 										# in case you want an easy reference to return to the directory you started in.
-STUDY=~/compute/skilledReadingStudy					    # location of study directory
-TEMPLATE_DIR=${STUDY}/template 							# destination for template output
-DICOM_DIR=${STUDY}/dicomdir 						    # location of raw dicoms
-SCRIPT_DIR=~/analyses/structuralSkilledReading			# location of scripts that might be referenced; assumed to be separate from the data directory.
-LIST=${SCRIPT_DIR}/participants.tsv 					# list of participant IDs
+START_DIR=${pwd} 											# in case you want an easy reference to return to the directory you started in.
+STUDY=~/compute/skilledReadingStudy					    	# location of study directory
+TEMPLATE_DIR=${STUDY}/template 								# destination for template output
+DICOM_DIR=${STUDY}/dicomdir/${1}/t1_mpr_sag_iso_mprage_7	# location of raw dicoms for participant
+SCRIPT_DIR=~/analyses/structuralSkilledReading				# location of scripts that might be referenced; assumed to be separate from the data directory.
+PARTICIPANT_STRUCT=${STUDY}/structural/{1}					# location of derived participant structural data
 
 ####################
 # --- COMMANDS --- #
 ####################
+# OPERATIONS: these are performed once per participant as submitted.
+# 1. NIFTIs are created from the native DICOMS
+# 2. NIFTIs are ACPC aligned
+# 3. N4Bias corrections are performed.
+# ------------------
 
-# Ensure conditions are right for this to run
-# create a directory for the template
-if [ ! -d ${TEMPLATE_DIR} ]; then
-	mkdir -p ${TEMPLATE_DIR}
-fi
+# 1. Create NIFTI files from the DICOMs
+# check for the dicoms
 
-# make sure the dicom directory exists
-if [ ! -d ${DICOM_DIR} ]; then
-	echo ${DICOM_DIR} does not exist, check your variable DICOM_DIR.
+if [ ! -d ${DICOM_DIR} && ! -f ${DICOM_DIR}/*.dcm ]; then
+	echo "I did not find anything to process."
 	exit 1
 fi
 
-# check for participant list
-if [ ! -f ${LIST} ]; then
-	echo ${LIST} does not exist, check your variable LIST
-	exit 1
+# make NIFTI files
+if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
+	cd ${PARTICIPANT_STRUCT}
+	dcm2niix -a y -g n -x y ${DICOM_DIR}/*.dcm
+	mv co*.nii struct_orig.nii
 fi
 
-# Create NIFTI files from the DICOMs
-cd $DICOM_DIR
 
-for i in $(ls $LIST); do
+cd $PARTICIPANT_DIR
 
-    T1_DIR=${DICOM_DIR}/$i
-    PARTICIPANT_DIR=${TEMPLATE_DIR}/"${i/t1_Luke_Reading_}"
-
-    if [ ! -d $PARTICIPANT_DIR ]; then
-        mkdir $PARTICIPANT_DIR
-    fi
+# 2. Perform ACPC alignment
+if [ ! -f ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz ]; then
+	acpcdetect -M -o ${PARTICIPANT_STRUCT}/struct_acpc.nii.gz -i ${PARTICIPANT_STRUCT}/struct_orig.nii
+fi
 
 
-    # construct
-    if [ ! -f ${PARTICIPANT_DIR}/struct_orig.nii.gz ]; then
+# n4bc
+DIM=3
+ACPC=${PARTICIPANT_STRUCT}/struct_acpc.nii.gz
+N4=${PARTICIPANT_STRUCT}/struct_n4bc.nii.gz
 
-        cd $T1_DIR
-        dcm2nii -a y -g n -x y *.dcm
-        mv co*.nii ${PARTICIPANT_DIR}/struct_orig.nii
-        rm *.nii
+CON=[50x50x50x50,0.0000001]
+SHRINK=4
+BSPLINE=[200]
 
-    fi
+if [ ! -f $N4 ]; then
 
+	N4BiasFieldCorrection \
+	-d $DIM \
+	-i $ACPC \
+	-s $SHRINK \
+	-c $CON \
+	-b $BSPLINE \
+	-o $N4
 
-    cd $PARTICIPANT_DIR
+fi
 
-    # acpc align
-    if [ ! -f struct_acpc.nii.gz ]; then
-        acpcdetect -M -o struct_acpc.nii.gz -i struct_orig.nii
-    fi
-
-
-    # n4bc
-    dim=3
-    input=struct_acpc.nii.gz
-    n4=struct_n4bc.nii.gz
-
-    con=[50x50x50x50,0.0000001]
-    shrink=4
-    bspline=[200]
-
-    if [ ! -f $n4 ]; then
-
-        N4BiasFieldCorrection \
-        -d $dim \
-        -i $input \
-        -s $shrink \
-        -c $con \
-        -b $bspline \
-        -o $n4
-
-    fi
-
-cd $DICOM_DIR
 done

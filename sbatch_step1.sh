@@ -63,7 +63,7 @@ if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	-x y \
 	-o ${PARTICIPANT_STRUCT} \
 	-i ${DICOM_DIR}
-	mv ${PARTICIPANT_STRUCT}/*Crop*.nii ${PARTICIPANT_STRUCT}/${1}_T1w.nii
+	mv ${PARTICIPANT_STRUCT}/*Crop*.nii.gz ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz
 fi
 
 # 2. Perform ACPC alignment
@@ -71,7 +71,7 @@ if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz ]; then
 	${ACPC} \
 	-M \
 	-o ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz \
-	-i ${PARTICIPANT_STRUCT}/${1}_T1w.nii
+	-i ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz
 fi
 
 

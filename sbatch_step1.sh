@@ -59,10 +59,11 @@ fi
 # make NIFTI files
 if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	${D2N} \
+	-z y \
 	-x y \
 	-o ${PARTICIPANT_STRUCT} \
 	-i ${DICOM_DIR}
-	mv ${PARTICIPANT_STRUCT}/co*.nii ${PARTICIPANT_STRUCT}/struct_orig.nii
+	#mv ${PARTICIPANT_STRUCT}/co*.nii ${PARTICIPANT_STRUCT}/struct_orig.nii
 fi
 
 # 2. Perform ACPC alignment

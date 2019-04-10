@@ -25,9 +25,9 @@ export OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE
 #######################
 
 START_DIR=${pwd} 										# in case you want an easy reference to return to the directory you started in.
-STUDY=~/compute/skilledReading							# location of study directory
+STUDY=~/compute/skilledReadingStudy					    # location of study directory
 TEMPLATE_DIR=${STUDY}/template 							# destination for template output
-DICOM_DIR=${STUDY}/data/dicomdir 						# location of raw dicoms
+DICOM_DIR=${STUDY}/dicomdir 						    # location of raw dicoms
 SCRIPT_DIR=~/analyses/structuralSkilledReading			# location of scripts that might be referenced; assumed to be separate from the data directory.
 LIST=${SCRIPT_DIR}/participants.tsv 					# list of participant IDs
 

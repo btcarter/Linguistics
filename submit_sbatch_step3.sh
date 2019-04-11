@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem-per-cpu=32gb   # memory per CPU core
-#SBATCH -J "template"   # job name
+#SBATCH -J "step3"   # job name
 #SBATCH --mail-user=ben88@byu.edu  # email address
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL

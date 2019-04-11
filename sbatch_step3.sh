@@ -49,6 +49,12 @@ ATLAS=~/templates/adult/MNI152c/mni_icbm152_nlin_sym_09c/mni_icbm152_t1_tal_nlin
 # ------------------
 
 # 1. Copy participant aligned images
+
+if [ ! -d ${CONSTRUCT_DIR} ]; then
+	mkdir -p ${CONSTRUCT_DIR}
+fi
+
+
 for i in $(cat ${LIST}); do
     if [ ! -f ${CONSTRUCT_DIR}/${i}_T1w_mni.nii.gz ]; then
         cp ${PARTICIPANT_STRUCT}/${i}/${i}_T1w_mni.nii.gz ${CONSTRUCT_DIR}/${i}_T1w_mni.nii.gz

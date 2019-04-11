@@ -20,7 +20,7 @@ if [ ! -f ${LIST} ]; then
 fi
 
 # check for logfiles destination
-OUT=${LOG}/TEMPLATE_STEP2_${TIME}
+OUT=${LOG}/TEMPLATE_STEP3_${TIME}
 if [ ! -d ${OUT} ]; then
 	mkdir -p ${OUT}
 fi

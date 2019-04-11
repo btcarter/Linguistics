@@ -28,25 +28,24 @@ STUDY=~/compute/skilledReadingStudy					    	# location of study directory
 TEMPLATE_DIR=${STUDY}/template 								# destination for template output
 SCRIPT_DIR=~/analyses/structuralSkilledReading				# location of scripts that might be referenced; assumed to be separate from the data directory.
 PARTICIPANT_STRUCT=${STUDY}/structural/${1}					# location of derived participant structural data
-ATLAS=mni_icbm152_t1_tal_nlin_sym_09c.nii				# location of the MNI ICBM 152 atlas files
+ATLAS=~/templates/adult/MNI152c/mni_icbm152_nlin_sym_09c	# location of the MNI ICBM 2009c Nonlinear Symmetric atlas NIFTI files
 
 ####################
 # --- COMMANDS --- #
 ####################
 # ------------------
 # OPERATIONS: these are performed once per participant as submitted.
-# 1. N4BC NIFTIs are subjected to an ANTs based transformation into MNI space.
+# 1. N4BC NIFTIs are subjected to an ANTs based affine registration.
+# 2. Registration used to move participant T1 into MNI space completed via WarpImageMultiTransform.
 #
 # REQUIRES: things needed to run this script
-# 1. MNI aligne ICBM_152 template atlas
+# 1. MNI ICBM 2009c Nonlinear Symmetric atlas NIFTI files. Can be downloaded via command 'wget
+#	 http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09c_nifti.zip'.
 # ------------------
 
-
-cd $subjDir
-
-
-MOV=${PARTICIPANT_STRUCT}/struct_n4bc.nii.gz
-OUT=${PARTICIPANT_STRUCT}/ants_
+# 1. Affine transformation
+MOV=${PARTICIPANT_STRUCT}/${1}_T1w_n4bc.nii.gz
+OUT=${PARTICIPANT_STRUCT}/${1}_T1w_ants_
 
 ITS=100x100x100x20
 DIM=3
@@ -69,8 +68,9 @@ if [ ! -f ${OUT}Affine.txt ]; then
 fi
 
 
-if [ ! -f ${PARTICIPANT_STRUCT}/struct_mni.nii.gz ]; then
+# 2. WarpImageMultiTransform
+if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_mni.nii.gz ]; then
 
-    WarpImageMultiTransform $DIM $MOV struct_mni.nii.gz ${OUT}Warp.nii.gz ${OUT}Affine.txt -R ${ATLAS}
+    WarpImageMultiTransform $DIM $MOV ${PARTICIPANT_STRUCT}/${1}_T1w_mni.nii.gz ${OUT}Warp.nii.gz ${OUT}Affine.txt -R ${ATLAS}
 
 fi

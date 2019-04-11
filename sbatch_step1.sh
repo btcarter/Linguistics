@@ -57,30 +57,31 @@ if [ ! -d ${PARTICIPANT_STRUCT} ]; then
 fi
 
 # make NIFTI files
-if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz ]; then
+if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w.nii ]; then
 	${D2N} \
-	-z y \
+	-z n \
 	-x y \
 	-o ${PARTICIPANT_STRUCT} \
 	-i ${DICOM_DIR}
-	mv ${PARTICIPANT_STRUCT}/*Crop*.nii.gz ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz
+	mv ${PARTICIPANT_STRUCT}/*Crop*.nii ${PARTICIPANT_STRUCT}/${1}_T1w.nii
+	rm core*
 fi
 
 sleep 1
 
 # 2. Perform ACPC alignment
-if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz ]; then
+if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii ]; then
 	${ACPC} \
 	-M \
-	-o ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz \
-	-i ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz
+	-o ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii \
+	-i ${PARTICIPANT_STRUCT}/${1}_T1w.nii
 fi
 
 sleep 1
 
 # 3. Perform N4-Bias Correction
 DIM=3
-ACPC=${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz
+ACPC=${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii
 N4=${PARTICIPANT_STRUCT}/${1}_T1w_n4bc.nii.gz
 
 CON=[50x50x50x50,0.0000001]

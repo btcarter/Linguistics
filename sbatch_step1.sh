@@ -57,7 +57,7 @@ if [ ! -d ${PARTICIPANT_STRUCT} ]; then
 fi
 
 # make NIFTI files
-if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
+if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz ]; then
 	${D2N} \
 	-z y \
 	-x y \
@@ -65,6 +65,8 @@ if [ ! -f ${PARTICIPANT_STRUCT}/struct_orig.nii.gz ]; then
 	-i ${DICOM_DIR}
 	mv ${PARTICIPANT_STRUCT}/*Crop*.nii.gz ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz
 fi
+
+sleep 1
 
 # 2. Perform ACPC alignment
 if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz ]; then
@@ -74,6 +76,7 @@ if [ ! -f ${PARTICIPANT_STRUCT}/${1}_T1w_acpc.nii.gz ]; then
 	-i ${PARTICIPANT_STRUCT}/${1}_T1w.nii.gz
 fi
 
+sleep 1
 
 # 3. Perform N4-Bias Correction
 DIM=3

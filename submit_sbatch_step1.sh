@@ -50,7 +50,7 @@ for i in $(cat $LIST); do
     sbatch \
     -o ${OUT}/output_step1_${i}.txt \
     -e ${OUT}/error_step1_${i}.txt \
-    sbatch_step1.sh ${i}
+    ${SCRIPT_DIR}/sbatch_step1.sh ${i}
 
     sleep 1
 

@@ -5,11 +5,14 @@
 # Butchered by Ben Carter, 2019-04-09.
 
 
-#SBATCH --time=10:00:00   # walltime
-#SBATCH --ntasks=2   # number of processor cores (i.e. tasks)
+#SBATCH --time=01:00:00   # walltime
+#SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem-per-cpu=32gb   # memory per CPU core
-#SBATCH -J "Struc"   # job name
+#SBATCH -J "dm2n4"   # job name
+#SBATCH --mail-user=ben88@byu.edu  # email address
+#SBATCH --mail-type=END
+#SBATCH --mail-type=FAIL
 
 # Compatibility variables for PBS. Delete if not needed.
 export PBS_NODEFILE=`/fslapps/fslutils/generate_pbs_nodefile`

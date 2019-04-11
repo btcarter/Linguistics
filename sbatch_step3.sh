@@ -62,7 +62,7 @@ for i in $(cat ${LIST}); do
 done
 
 # 2. Build a study template
-cd $CONSTRUCT_DIR
+cd ${CONSTRUCT_DIR}
 
 DIM=3
 ITER=30x90x30

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --time=100:00:00   # walltime
-#SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
+#SBATCH --ntasks=6   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
-#SBATCH --mem-per-cpu=65536M   # memory per CPU core
+#SBATCH --mem-per-cpu=8gb   # memory per CPU core
 #SBATCH -J "step3"   # job name
 #SBATCH --mail-user=ben88@byu.edu  # email address
 #SBATCH --mail-type=END
@@ -69,7 +69,8 @@ ITER=30x90x30
 TRANS=GR
 SIM=CC
 CON=2
-PROC=6
+PROC=6      # This argument here is the number of processors to run the job on. Have it match with ppn uptop -nate
+
 
 buildtemplateparallel.sh \
 -d $DIM \

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --time=144:00:00   # walltime
+#SBATCH --time=7:00:00   # walltime
 #SBATCH --ntasks=6   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
-#SBATCH --mem-per-cpu=131072M   # memory per CPU core
+#SBATCH --mem-per-cpu=65536M   # memory per CPU core
 #SBATCH -J "step3"   # job name
 #SBATCH --mail-user=ben88@byu.edu  # email address
 #SBATCH --mail-type=END

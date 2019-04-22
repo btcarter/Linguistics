@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --time=96:00:00   # walltime
-#SBATCH --ntasks=6   # number of processor cores (i.e. tasks)
+#SBATCH --ntasks=2   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem-per-cpu=65536M   # memory per CPU core
 #SBATCH -J "step3"   # job name

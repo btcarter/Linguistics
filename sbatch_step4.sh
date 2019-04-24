@@ -2,44 +2,57 @@
 
 
 # Written by Nathan Muncy on 11/20/17
+# Butchered by Ben Carter, 2019-04-09.
 
 
 #SBATCH --time=50:00:00   # walltime
-#SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
+#SBATCH --ntasks=6   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --mem-per-cpu=16gb   # memory per CPU core
-#SBATCH -J "BenTemp"   # job name
+#SBATCH -J "step4Temp"   # job name
 
 # Compatibility variables for PBS. Delete if not needed.
 export PBS_NODEFILE=`/fslapps/fslutils/generate_pbs_nodefile`
 export PBS_JOBID=$SLURM_JOB_ID
-export PBS_O_WORKDIR="$SLURM_SUBMIT_DIR"
+export PBS_O_WORK_DIR="$SLURM_SUBMIT_DIR"
 export PBS_QUEUE=batch
 
 # Set the max number of threads to use for programs using OpenMP. Should be <= ppn. Does nothing if the program doesn't use OpenMP.
 export OMP_NUM_THREADS=$SLURM_CPUS_ON_NODE
 
 
-### settings for antsJointLabelFusion
+#######################
+# --- ENVIRONMENT --- #
+#######################
+
+WORK_DIR=/fslhome/nmuncy/compute/Ben_template/construct
+OASIS_DIR=~/templates/adult/OASIS-TRT-20_volumes
+
+####################
+# --- COMMANDS --- #
+####################
+# ------------------
+# OPERATIONS: these are performed once per participant as submitted.
+# 1. Performs model segmentation and labeling via antsJointLabelFusion_fixed.sh
+#
+# REQUIRES: things needed to run this script
+# 1. OASIS 20 atlas and labels (OASIS-TRT-20_volumes.tar.gz found at https://osf.io/tyvhs/) from the Mindboggle Project (https://osf.io/nhtur/).
+# ------------------
 
 
-workDir=/fslhome/nmuncy/compute/Ben_template/construct
-tempDir=~/bin/Templates/old_templates/oasis_20
-
-
-cd $workDir
+cd $WORK_DIR
 
 dim=3
-out=${workDir}/JLF_
-subj=${workDir}/cthulhu_mni_template.nii.gz
-atlas=${tempDir}/Atlases
-labels=${tempDir}/Labels
+out=${WORK_DIR}/JLF_
+subj=${WORK_DIR}/dyce_mni_template.nii.gz
+atlas=${OASIS_DIR}
+labels=${OASIS_DIR}
 parallel=5
-cores=1
-post=${workDir}/priors_JLF/label_%04d.nii.gz
+cores=6
+post=${WORK_DIR}/priors_JLF/label_%04d.nii.gz
 
 
-antsJointLabelFusion_fixed.sh \
+antsJointLabelFusion.sh \
 -d ${dim} \
 -t ${subj} \
 -o ${out} \
@@ -51,23 +64,23 @@ antsJointLabelFusion_fixed.sh \
 -v 16gb \
 -w 50:00:00 \
 -z 16gb \
--g ${atlas}/atlas_1/t1weighted.nii.gz -l ${labels}/1_labels.nii.gz \
--g ${atlas}/atlas_2/t1weighted.nii.gz -l ${labels}/2_labels.nii.gz \
--g ${atlas}/atlas_3/t1weighted.nii.gz -l ${labels}/3_labels.nii.gz \
--g ${atlas}/atlas_4/t1weighted.nii.gz -l ${labels}/4_labels.nii.gz \
--g ${atlas}/atlas_5/t1weighted.nii.gz -l ${labels}/5_labels.nii.gz \
--g ${atlas}/atlas_6/t1weighted.nii.gz -l ${labels}/6_labels.nii.gz \
--g ${atlas}/atlas_7/t1weighted.nii.gz -l ${labels}/7_labels.nii.gz \
--g ${atlas}/atlas_8/t1weighted.nii.gz -l ${labels}/8_labels.nii.gz \
--g ${atlas}/atlas_9/t1weighted.nii.gz -l ${labels}/9_labels.nii.gz \
--g ${atlas}/atlas_10/t1weighted.nii.gz -l ${labels}/10_labels.nii.gz \
--g ${atlas}/atlas_11/t1weighted.nii.gz -l ${labels}/11_labels.nii.gz \
--g ${atlas}/atlas_12/t1weighted.nii.gz -l ${labels}/12_labels.nii.gz \
--g ${atlas}/atlas_13/t1weighted.nii.gz -l ${labels}/13_labels.nii.gz \
--g ${atlas}/atlas_14/t1weighted.nii.gz -l ${labels}/14_labels.nii.gz \
--g ${atlas}/atlas_15/t1weighted.nii.gz -l ${labels}/15_labels.nii.gz \
--g ${atlas}/atlas_16/t1weighted.nii.gz -l ${labels}/16_labels.nii.gz \
--g ${atlas}/atlas_17/t1weighted.nii.gz -l ${labels}/17_labels.nii.gz \
--g ${atlas}/atlas_18/t1weighted.nii.gz -l ${labels}/18_labels.nii.gz \
--g ${atlas}/atlas_19/t1weighted.nii.gz -l ${labels}/19_labels.nii.gz \
--g ${atlas}/atlas_20/t1weighted.nii.gz -l ${labels}/20_labels.nii.gz
+-g ${atlas}/OASIS-TRT-20-1/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-1/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-2/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-2/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-3/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-3/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-4/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-4/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-5/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-5/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-6/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-6/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-7/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-7/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-8/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-8/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-9/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-9/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-10/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-10/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-11/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-11/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-12/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-12/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-13/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-13/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-14/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-14/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-15/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-15/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-16/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-16/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-17/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-17/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-18/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-18/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-19/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-19/labels.DKT31.manual.nii.gz \
+-g ${atlas}/OASIS-TRT-20-20/t1weighted.nii.gz -l ${labels}/OASIS-TRT-20-20/labels.DKT31.manual.nii.gz

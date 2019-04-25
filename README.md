@@ -5,3 +5,5 @@ This fork was started so I could learn how Muncy created the structural model fo
 
 ## Dependencies
 1. dcm2niix
+2. ANTs
+3. c3d
